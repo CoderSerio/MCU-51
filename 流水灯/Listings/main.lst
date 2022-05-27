@@ -1,0 +1,56 @@
+C51 COMPILER V9.60.0.0   MAIN                                                              05/27/2022 17:33:19 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: E:\COMPILE\KILE\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings
+                    -\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include "reg52.h"
+   2          #include "intrins.h" // 包含循环函数的头文件
+   3          typedef unsigned char u8;
+   4          typedef unsigned int u16;
+   5          
+   6          u8 led = 0xfe;
+   7          
+   8          void delay(u8 metaTime) 
+   9          {
+  10   1          u8 i = 110;
+  11   1          while(i --) 
+  12   1          {
+  13   2            while(metaTime --);
+  14   2          }
+  15   1      }
+  16          
+  17          void walking()
+  18          {
+  19   1        // 向左循环，和位运算的区别是字面意思——循环
+  20   1        led = _crol_(led, 1);
+  21   1        P1 = led;
+  22   1      }
+  23          
+  24          
+  25          void main ()
+  26          {
+  27   1        while(1)
+  28   1        {
+  29   2          walking();
+  30   2          delay(1);
+  31   2        }
+  32   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     43    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      1    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
