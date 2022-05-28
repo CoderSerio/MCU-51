@@ -1,0 +1,69 @@
+C51 COMPILER V9.60.0.0   MAIN                                                              05/28/2022 19:02:19 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: E:\COMPILE\KILE\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings
+                    -\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include "reg52.h"
+   2          #include "intrins.h"
+   3          
+   4          typedef int u16;
+   5          typedef unsigned char u8;
+   6          
+   7          u8  code smaduan[]={0x3f,0x06,0x5b,0x4f,
+   8                              0x66,0x6d,0x7d,0x07,
+   9                              0x7f,0x6f,0x77,0x7c,
+  10                              0x39,0x5e,0x79,0x71};// 字形码
+  11          u16 temp = 1;
+  12          sbit DUAN = P2^6;
+  13          sbit WEI = P2^7;                    
+  14                              
+  15          void delay(time)
+  16          {
+  17   1        while(time --);
+  18   1      }
+  19          
+  20          void main()
+  21          {
+  22   1      
+  23   1          P0 = 0xfe;  
+  24   1          WEI = 1; // 开启位锁存，将保存P0当前的值，决定8个灯中哪些亮
+  25   1          WEI = 0; // 关闭位锁存
+  26   1          
+  27   1          P0=0x06; 
+  28   1          DUAN = 1; // 开启段锁存，将保存P0当前的值，决定灯的8个段中哪些亮
+  29   1          DUAN = 0; // 关闭段锁存
+  30   1          while(1)  
+  31   1          {
+  32   2              delay(500000);
+  33   2              // P0 = _crol_(P0, 1);
+  34   2              // WEI = 1;
+  35   2              // WEI = 0;
+  36   2              
+  37   2              P0 = smaduan[temp ++ % 16];
+  38   2              DUAN = 1;
+  39   2              DUAN = 0;
+  40   2              
+  41   2          }
+  42   1        
+  43   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     71    ----
+   CONSTANT SIZE    =     16    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+C51 COMPILER V9.60.0.0   MAIN                                                              05/28/2022 19:02:19 PAGE 2   
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
