@@ -1,0 +1,167 @@
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                    05/28/2022  20:19:19  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22.2.0, INVOKED BY:
+E:\COMPILE\KILE\C51\BIN\BL51.EXE .\Objects\STARTUP.obj, .\Objects\main.obj TO .\Objects\DynamicDigitalTube PRINT (.\List
+>> ings\DynamicDigitalTube.m51) RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  .\Objects\STARTUP.obj (?C_STARTUP)
+  .\Objects\main.obj (MAIN)
+  E:\COMPILE\KILE\C51\LIB\C51S.LIB (?C_INIT)
+  E:\COMPILE\KILE\C51\LIB\C51S.LIB (?C?ULDIV)
+  E:\COMPILE\KILE\C51\LIB\C51S.LIB (?C?ULCMP)
+
+
+LINK MAP OF MODULE:  .\Objects\DynamicDigitalTube (?C_STARTUP)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     001DH     UNIT         ?DT?MAIN
+            IDATA   0025H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     00DFH     UNIT         ?C?LIB_CODE
+            CODE    00E2H     00C5H     UNIT         ?PR?MAIN?MAIN
+            CODE    01A7H     008CH     UNIT         ?C_C51STARTUP
+            CODE    0233H     0028H     UNIT         ?C_INITSEG
+            CODE    025BH     000BH     UNIT         ?PR?_DELAY?MAIN
+
+
+
+OVERLAY MAP OF MODULE:   .\Objects\DynamicDigitalTube (?C_STARTUP)
+
+
+SEGMENT
+  +--> CALLED SEGMENT
+---------------------
+?C_C51STARTUP
+  +--> ?PR?MAIN?MAIN
+  +--> ?C_INITSEG
+
+?PR?MAIN?MAIN
+  +--> ?PR?_DELAY?MAIN
+
+
+
+SYMBOL TABLE OF MODULE:  .\Objects\DynamicDigitalTube (?C_STARTUP)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        ?C_STARTUP
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  05/28/2022  20:19:19  PAGE 2
+
+
+  C:01A7H         SEGMENT       ?C_C51STARTUP
+  I:0025H         SEGMENT       ?STACK
+  C:0000H         PUBLIC        ?C_STARTUP
+  D:00E0H         SYMBOL        ACC
+  D:00F0H         SYMBOL        B
+  D:0083H         SYMBOL        DPH
+  D:0082H         SYMBOL        DPL
+  N:0000H         SYMBOL        IBPSTACK
+  N:0100H         SYMBOL        IBPSTACKTOP
+  N:0080H         SYMBOL        IDATALEN
+  C:01AAH         SYMBOL        IDATALOOP
+  N:0000H         SYMBOL        PBPSTACK
+  N:0100H         SYMBOL        PBPSTACKTOP
+  N:0000H         SYMBOL        PDATALEN
+  N:0000H         SYMBOL        PDATASTART
+  N:0000H         SYMBOL        PPAGE
+  N:0000H         SYMBOL        PPAGEENABLE
+  D:00A0H         SYMBOL        PPAGE_SFR
+  D:0081H         SYMBOL        SP
+  C:01A7H         SYMBOL        STARTUP1
+  N:0000H         SYMBOL        XBPSTACK
+  N:0000H         SYMBOL        XBPSTACKTOP
+  N:0000H         SYMBOL        XDATALEN
+  N:0000H         SYMBOL        XDATASTART
+  C:0000H         LINE#         126
+  C:01A7H         LINE#         133
+  C:01A9H         LINE#         134
+  C:01AAH         LINE#         135
+  C:01ABH         LINE#         136
+  C:01ADH         LINE#         185
+  C:01B0H         LINE#         196
+  -------         ENDMOD        ?C_STARTUP
+
+  -------         MODULE        MAIN
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0080H         PUBLIC        P0
+  D:0090H         PUBLIC        P1
+  D:00A0H         PUBLIC        P2
+  D:00B0H         PUBLIC        P3
+  D:00A8H         PUBLIC        IE
+  C:025BH         PUBLIC        _delay
+  D:00B8H         PUBLIC        IP
+  C:00E2H         PUBLIC        main
+  B:00A0H.6       PUBLIC        DUAN
+  D:0098H         PUBLIC        SCON
+  D:0088H         PUBLIC        TCON
+  D:0008H         PUBLIC        temp
+  D:0009H         PUBLIC        num
+  B:00A0H.7       PUBLIC        WEI
+  D:00C8H         PUBLIC        T2CON
+  D:000DH         PUBLIC        i
+  D:0011H         PUBLIC        tempNum
+  D:0015H         PUBLIC        smaduan
+  D:00D0H         PUBLIC        PSW
+  -------         PROC          _DELAY
+  D:0006H         SYMBOL        time
+  C:025BH         LINE#         20
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  05/28/2022  20:19:19  PAGE 3
+
+
+  C:025BH         LINE#         21
+  C:025BH         LINE#         22
+  C:0265H         LINE#         23
+  -------         ENDPROC       _DELAY
+  -------         PROC          MAIN
+  C:00E2H         LINE#         25
+  C:00E2H         LINE#         26
+  C:00E2H         LINE#         27
+  C:00E2H         LINE#         28
+  C:00E2H         LINE#         29
+  C:00EEH         LINE#         30
+  C:010BH         LINE#         31
+  C:010BH         LINE#         32
+  C:010EH         LINE#         33
+  C:0110H         LINE#         34
+  C:0112H         LINE#         36
+  C:012AH         LINE#         37
+  C:012CH         LINE#         38
+  C:012EH         LINE#         39
+  C:0147H         LINE#         42
+  C:014AH         LINE#         43
+  C:014CH         LINE#         44
+  C:014EH         LINE#         46
+  C:015BH         LINE#         47
+  C:0172H         LINE#         49
+  C:0188H         LINE#         50
+  C:0188H         LINE#         51
+  C:019DH         LINE#         52
+  C:019DH         LINE#         54
+  C:01A4H         LINE#         55
+  -------         ENDPROC       MAIN
+  -------         ENDMOD        MAIN
+
+  -------         MODULE        ?C?ULDIV
+  C:003FH         PUBLIC        ?C?ULDIV
+  -------         ENDMOD        ?C?ULDIV
+
+  -------         MODULE        ?C?ULCMP
+  C:00D1H         PUBLIC        ?C?ULCMP
+  -------         ENDMOD        ?C?ULCMP
+
+Program Size: data=38.0 xdata=0 code=614
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)
