@@ -1,0 +1,179 @@
+C51 COMPILER V9.60.0.0   MAIN                                                              06/01/2022 22:22:34 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: E:\COMPILE\KILE\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings
+                    -\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include "reg52.h"
+   2          #include "intrins.h"
+   3          
+   4          typedef unsigned char u8;
+   5          typedef unsigned int u16;
+   6          
+   7          #define KEYS P3
+   8          
+   9          sbit DUAN = P2^6;
+  10          sbit WEI = P2^7;
+  11          
+  12          u16 index = 0;
+  13          u8 temp;
+  14          u8 code smaDUAN[] = {0x3f,0x06,0x5b,0x4f,
+  15                               0x66,0x6d,0x7d,0x07,
+  16                               0x7f,0x6f,0x77,0x7c,
+  17                               0x39,0x5e,0x79,0x71}; // ¹²Òõ¼«ÊýÂë¹ÜµÄ×ÖÐÎÂë
+  18          
+  19          void delay(u16 time) 
+  20          { 
+  21   1        while(time --);
+  22   1      }
+  23          // ÓÃÓÚ¿ØÖÆ¾§Ìå¹Ü¶ÎÏÔÊ¾
+  24          void display(u16 num)
+  25          {
+  26   1        P0 = smaDUAN[num];
+  27   1        DUAN = 1;
+  28   1        DUAN = 0;
+  29   1      }
+  30          
+  31          // ÓÃÓÚÉ¨Ãèµ½µ×°´ÁËÉ¨Ãè°´¼ü
+  32          // Ô­ÀíÊÇ½«8Î»·ÖÎª¸ß4Î»ºÍµÍ4Î»£¬·Ö±ð´ú±íÐÐÁÐ£¬Ò²¾Í¿ÉÒÔ±íÊ¾4*4=16¸ö¼ü
+  33          // Ä¬ÈÏÇé¿öÏÂ¸ß4Î»ÊÇ¸ßµçÆ½£¬µÍ4Î»ÊÇµÍµçÆ½£¬°´ÏÂ°´¼üÖ®ºóÁªÍ¨£¬¸ßµÍÁ½Î»¶ÌÂ·¶¼ÊÇ0(ÖÁÓÚÊÇ²»ÊÇ¶ÌÂ·Ôì³ÉµÄÎÒÒ²²»Ç
+             -å³þ£¬Ñ§µÃ²î£¬²»Ì«¶®µçÂ·Í¼)
+  34          // Õâ¸öº¯Êý¾ÍÊÇÓÃ4*4=16¸öÌõ¼þÓï¾äÅÐ¶Ï¾¿¾¹ÊÇÄÄÒ»¸ö
+  35          // ËÄÎ»ÖÐÒ»¸ö±ä0µÄ»°£¬ÄÇÃ´¿ÉÄÜµÄÊ®Áù½øÖÆÖµ¾ÍÊÇ£º7 b d e£¬ËùÒÔÈç¹ûÎªÁË±ãÓÚÀí½â£¬ÉõÖÁ¿ÉÒÔ0x77, 0x7b, 0x7d, 0
+             -x7e, 0xb7...Ã¶¾ÙÅÐ¶Ï16¸öÖµÀ´Ì½²â..
+  36          void scan()
+  37          {
+  38   1        P3 = 0xfe; // 1111 1110
+  39   1        temp = P3; // ²»ÒªÖ±½ÓÓëÔËËã£¬ÕâÑù»á¸ü¸ÄP3µÄÖµ
+  40   1        temp = temp&0xf0; // È¡¸ßËÄÎ»£¬ 1111 0000
+  41   1        if(temp != 0xf0) // °´¼ü°´ÏÂ¿ÉÄÜÊ¹µÃ¸ßÎ»µÄ1±»µÍÎ»µÄ0¶ÌÂ·³É0
+  42   1        {
+  43   2          delay(1000);
+  44   2          if(temp != 0xf0)
+  45   2          {
+  46   3            temp = P3; // ÖØÐÂ»ñÈ¡P3£¬¿ªÊ¼Ì½¾¿ÊÇÄÄ¸ö¸ßÎ»±äÎªÁË0
+  47   3            switch(temp)
+  48   3            {
+  49   4              case(0xee): index = 0;break;
+  50   4              case(0xde): index = 1;break;
+  51   4              case(0xbe): index = 2;break;
+  52   4              case(0x7e): index = 3;break;
+C51 COMPILER V9.60.0.0   MAIN                                                              06/01/2022 22:22:34 PAGE 2   
+
+  53   4            }
+  54   3          }
+  55   2          while(temp != 0xf0)
+  56   2          {
+  57   3            temp=P3;
+  58   3            temp=temp&0xf0;
+  59   3          } 
+  60   2          display(index);
+  61   2        }
+  62   1        // ÏÂÃæÒ²ÊÇÈç³öÒ»ÕÞ£¬e d b 7£¬¸´ÖÆÕ³Ìù¾ÍÀ´ÁË
+  63   1        P3 = 0xfd; 
+  64   1        temp = P3; 
+  65   1        temp = temp&0xf0; 
+  66   1        if(temp != 0xf0) 
+  67   1        {
+  68   2          delay(1000);
+  69   2          if(temp != 0xf0)
+  70   2          {
+  71   3            temp = P3; 
+  72   3            switch(temp)
+  73   3            {
+  74   4              case(0xed): index = 4;break;
+  75   4              case(0xdd): index = 5;break;
+  76   4              case(0xbd): index = 6;break;
+  77   4              case(0x7d): index = 7;break;
+  78   4            }
+  79   3          }
+  80   2          while(temp != 0xf0)
+  81   2          {
+  82   3            temp=P3;
+  83   3            temp=temp&0xf0;
+  84   3          } 
+  85   2          display(index);
+  86   2        }
+  87   1        // b
+  88   1        P3 = 0xfb; 
+  89   1        temp = P3; 
+  90   1        temp = temp&0xf0; 
+  91   1        if(temp != 0xf0) 
+  92   1        {
+  93   2          delay(1000);
+  94   2          if(temp != 0xf0)
+  95   2          {
+  96   3            temp = P3; 
+  97   3            switch(temp)
+  98   3            {
+  99   4              case(0xeb): index = 8;break;
+ 100   4              case(0xdb): index = 9;break;
+ 101   4              case(0xbb): index = 10;break;
+ 102   4              case(0x7b): index = 11;break;
+ 103   4            }
+ 104   3          }
+ 105   2          while(temp != 0xf0)
+ 106   2          {
+ 107   3            temp=P3;
+ 108   3            temp=temp&0xf0;
+ 109   3          } 
+ 110   2          display(index);
+ 111   2        }
+ 112   1        // 7
+ 113   1        P3 = 0xf7; 
+ 114   1        temp = P3; 
+C51 COMPILER V9.60.0.0   MAIN                                                              06/01/2022 22:22:34 PAGE 3   
+
+ 115   1        temp = temp&0xf0; 
+ 116   1        if(temp != 0xf0) 
+ 117   1        {
+ 118   2          delay(1000);
+ 119   2          if(temp != 0xf0)
+ 120   2          {
+ 121   3            temp = P3; 
+ 122   3            switch(temp)
+ 123   3            {
+ 124   4              case(0xe7): index = 12;break;
+ 125   4              case(0xd7): index = 13;break;
+ 126   4              case(0xb7): index = 14;break;
+ 127   4              case(0x77): index = 15;break;
+ 128   4            }
+ 129   3          }
+ 130   2          while(temp != 0xf0)
+ 131   2          {
+ 132   3            temp=P3;
+ 133   3            temp=temp&0xf0;
+ 134   3          } 
+ 135   2          display(index);
+ 136   2        }
+ 137   1      }
+ 138          
+ 139          void main()
+ 140          {
+ 141   1        P0 = 0xfe;
+ 142   1        WEI = 1;
+ 143   1        WEI = 0;
+ 144   1        delay(500000);
+ 145   1        while(1)
+ 146   1        {
+ 147   2          scan();
+ 148   2        }
+ 149   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    425    ----
+   CONSTANT SIZE    =     16    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      3    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
