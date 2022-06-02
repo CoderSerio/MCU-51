@@ -29,7 +29,6 @@ void int0Init()
 void main()
 {
 	led = 0;
-	
 	// 不写到循环里面，初始化完成之后，系统会自动监听中断事件的发生（前端人的表述）
 	int0Init();
 	while(1);

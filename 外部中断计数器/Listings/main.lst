@@ -1,0 +1,136 @@
+C51 COMPILER V9.60.0.0   MAIN                                                              06/02/2022 21:47:33 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: E:\COMPILE\KILE\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings
+                    -\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include "reg52.h"
+   2          #include "intrins.h"
+   3          
+   4          typedef unsigned long int u32;
+   5          typedef unsigned int u16;
+   6          typedef unsigned char u8;
+   7          
+   8          sbit DUAN = P2^6;
+   9          sbit WEI = P2^7;
+  10          sbit key0 = P3^2; // 对应INT0, interrupt0（外部中断0）
+  11          sbit key1 = P3^3; // 对应INT1,  interrupt2（外部中断1）
+  12          
+  13          
+  14          u8 smaDUAN[]={0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f};
+  15          u8 tempP0; // 作为P0的备份，用于维护P0的值；
+  16          u16 i = 0; // 循环用的
+  17          u32 num = 1; // 从1开始累加到9999 9999
+  18          u32 keyFlag = 1; // 用于处理当前状态： 1--进行， 0--停止
+  19          
+  20          void delay(u16 time)
+  21          {
+  22   1        while(time --);
+  23   1      }
+  24          
+  25          // 初始化INT0和INT1外部中断
+  26          void initINT01()
+  27          {
+  28   1        // 三步走
+  29   1        // 1. 开启中断系统总开关
+  30   1        EA = 1;
+  31   1        // 2. 开启外部中断 （外部中断0和1）
+  32   1        EX0 = 1; EX1 = 1;
+  33   1        // 3.设置电平触发方式
+  34   1        IT0 = 1;
+  35   1        
+  36   1        // 1、2可以简写为 IE = 0x85; IE是中断允许寄存器，其每一位相当于EX0 EX1等等
+  37   1        // 不过这里为了熟悉流程，就不采用简写了
+  38   1      }
+  39          
+  40          void display(u32 n)
+  41          {
+  42   1        for(i = 0, tempP0 = 0x7f; i < 8; i ++)
+  43   1        { 
+  44   2          P0 = tempP0;
+  45   2          WEI = 1;
+  46   2          WEI = 0;
+  47   2          
+  48   2          P0 = smaDUAN[n % 10];
+  49   2          DUAN = 1;
+  50   2          DUAN = 0;
+  51   2          n /= 10;
+  52   2          
+  53   2          // 熄灭，防止重影 
+  54   2          P0 = 0x00;
+C51 COMPILER V9.60.0.0   MAIN                                                              06/02/2022 21:47:33 PAGE 2   
+
+  55   2          DUAN = 1;
+  56   2          DUAN = 0;
+  57   2          
+  58   2          tempP0 = _cror_(tempP0, 1);
+  59   2        }
+  60   1        
+  61   1      }
+  62          
+  63          
+  64          void main()
+  65          { 
+  66   1        // 初始化为 0000 0001
+  67   1        initINT01();
+  68   1        while(1)
+  69   1        {
+  70   2      
+  71   2          display(num);
+  72   2          delay(500);
+  73   2          // keyFlag == 0表示当前暂停计数, keyFlag == 1则是进行计数
+  74   2          if(num < 99999999 && keyFlag == 1)
+  75   2          {
+  76   3            num ++;
+  77   3          }
+  78   2        }
+  79   1      }
+  80          
+  81          // 按下key0，使得计数在【进行】 和【暂停】两种状态间切换
+  82          void int0() interrupt 0
+  83          {
+  84   1        if(key0 == 0)
+  85   1        {
+  86   2          delay(1000);
+  87   2          if(key0 == 0)
+  88   2          {
+  89   3            keyFlag = !keyFlag;
+  90   3          }
+  91   2          while(key0 == 0);
+  92   2        }
+  93   1      } 
+  94          
+  95          // 按下key1归零复位
+  96          void int1() interrupt 2
+  97          {
+  98   1        if(key1 == 0)
+  99   1        {
+ 100   2          delay(1000);
+ 101   2          if(key1 == 0)
+ 102   2          {
+ 103   3            num = 0;
+ 104   3            keyFlag = 0;
+ 105   3          }
+ 106   2          while(key1 == 0);
+ 107   2        }
+ 108   1      } 
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    354    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     21       4
+C51 COMPILER V9.60.0.0   MAIN                                                              06/02/2022 21:47:33 PAGE 3   
+
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
