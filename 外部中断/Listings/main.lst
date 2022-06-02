@@ -1,0 +1,83 @@
+C51 COMPILER V9.60.0.0   MAIN                                                              06/02/2022 12:45:43 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: E:\COMPILE\KILE\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings
+                    -\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include "reg52.h"
+   2          #include "intrins.h"
+   3          
+   4          typedef unsigned char u8;
+   5          typedef unsigned int u16;
+   6          
+   7          sbit led = P1^0;
+   8          sbit k1 = P3^2;
+   9          
+  10          void delay (u16 time)
+  11          {
+  12   1        while(time --);
+  13   1      }
+  14          
+  15          // 初始化中断
+  16          void int0Init()
+  17          {
+  18   1        // INT0,设置外部中断触发方式,1就是低电平触发，0是高电平触发
+  19   1        // P32对应INT0, P33对应INT1, interrupt分别写0和1
+  20   1        // 这个需要参照电路图
+  21   1        IT0 = 1;
+  22   1        // 开启外部中断0，允许发生0中断
+  23   1        EX0 = 1;
+  24   1        // 打开总中断开关，允许发生中断
+  25   1        EA = 1;
+  26   1      }
+  27          
+  28          
+  29          void main()
+  30          {
+  31   1        led = 0;
+  32   1        
+  33   1        // 不写到循环里面，初始化完成之后，系统会自动监听中断事件的发生（前端人的表述）
+  34   1        int0Init();
+  35   1        while(1);
+  36   1      }
+  37          
+  38          
+  39          // 具体的中断操作写到main后面，可能是某种书写规范吧...
+  40          
+  41          // 中断函数不能直接调用，而是在中断触发时自动执行
+  42          // 0是中断号
+  43          void int0() interrupt 0
+  44          {
+  45   1        // 因为用到了按键，所以一样要 防抖
+  46   1        delay(1000);
+  47   1        if(k1 == 0) 
+  48   1        {
+  49   2          delay(1000);
+  50   2          if(k1 == 0)
+  51   2          {
+  52   3            led = ~led;   
+  53   3          }
+  54   2          while(k1 == 0);
+C51 COMPILER V9.60.0.0   MAIN                                                              06/02/2022 12:45:43 PAGE 2   
+
+  55   2        }
+  56   1      } 
+  57          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     74    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
