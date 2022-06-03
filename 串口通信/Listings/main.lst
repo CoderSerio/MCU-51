@@ -1,0 +1,86 @@
+C51 COMPILER V9.60.0.0   MAIN                                                              06/03/2022 15:21:34 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: E:\COMPILE\KILE\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings
+                    -\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include "reg51.h"
+   2          #include "intrins.h"
+   3          
+   4          typedef unsigned char u8;
+   5          typedef unsigned int u16;
+   6          typedef unsigned long int u32;
+   7          
+   8          void delay(u32 time)
+   9          {
+  10   1        while(time --);
+  11   1      }
+  12          
+  13          void initSerial()
+  14          {
+  15   1        
+  16   1        // ÒÀÈ»ÊÇËÄ²½×ß£¬ºÍ¶¨Ê±Æ÷ÖÐ¶ÏÀàËÆ 
+  17   1        // 1. È·¶¨TMODÖÐT1µÄ¹¤×÷·½Ê½(T1µÄ¹¤×÷·½Ê½2, 10: 8Î»×Ô¶¯ÖØ×°¼ÆÊ±Æ÷)
+  18   1        TMOD |= 0x20;
+  19   1        // 2. ¼ÆËãT1µÄ³õÖµ£¨ÐèÒªÆäËûÈí¼þ½øÐÐ²âÊÔ£¬ÕâÀïÈ¡F3£¬°ËÎ»ÖØ×°ÔØÁ½¸öÐ´Ò»Ñù£©
+  20   1        TH1 = 0xFE;
+  21   1        TH0 = 0xFE;
+  22   1        // 3. Æô¶¯T1
+  23   1        TR1 = 1; 
+  24   1        // 4. È·¶¨´®ÐÐ¿Ú¿ØÖÆ¡£PCONµÚÒ»Î»ÊÇ¹ØÁªSMOD£¬²¨ÌØÂÊ±¶ÔöÎ»µÄ£¬ÉèÖÃÎª1¾ÍÊÇ±¶Ôö£¬0²»±¶Ôö¡£
+  25   1        //£¨PCONÕâ¸öÆäÊµÎÒÒ²Ã»¸ã¶®Õâ¸öÊÇÊ²Ã´ÒâË¼£¬Õâ¸öºÃÏñ»á¾ö¶¨µÚ¶þ²½ÖÐTHµÄÈ¡Öµ£¬µ«ÊÇ¿´Ñù×ÓÖ»ÐèÒªµ÷ÕûµÚÒ»Î»¾ÍÐÐÁ
+             -Ë£¬ÕâÀïÈ¡1£©
+  26   1        // £¨SCON»á¾ö¶¨¹¤×÷·½Ê½¡¢½ÓÊÕ/·¢ËÍ¿ØÖÆµÈµÈ£¬Æä6 7Î»ÎªSM1ºÍSM0¡ª¡ª 
+  27   1        //    00£º ÒÆÎ»¼Ä´æÆ÷£» 01: 10Î»Òì²½ÊÕ·¢Æ÷(8Î»Êý¾Ý£¬²¨ÌØÂÊ¿É±ä)£» 10: 11Î»Òì²½ÊÕ·¢Æ÷; 11:11Î»Òì²½ÊÕ·¢Æ÷(²¨
+             -ÌØÂÊ¿É±ä)£©
+  28   1        PCON = 0x80;
+  29   1        SCON = 0x50;
+  30   1        ES = 1; // ¿ªÆô´®¿ÚÖÐ¶Ï
+  31   1        EA = 1;
+  32   1        
+  33   1        
+  34   1      
+  35   1      }
+  36          
+  37          void main()
+  38          {
+  39   1        initSerial();
+  40   1        while(1);
+  41   1      }
+  42          
+  43          void serial() interrupt 4
+  44          {
+  45   1        // ½ÓÊÕ£¨String Buffer£¿£©Êý¾Ý
+  46   1        // SBUFÊÇÒ»¸öÓÃÓÚc´æ´¢´®¿ÚÍ¨ÐÅÊý¾ÝµÄ¼Ä´æÆ÷¡£
+  47   1        u8 res = SBUF;
+  48   1        // ½ÓÊÕÍê³Éºó£¬Ó²¼þ»á½«RI£¨½ÓÊÕÖÐ¶Ï¿ØÖÆÎ»£©ÖÃÎª1£¬±íÊ¾½ÓÊÕÍê±Ï£¬ÐèÒªÈí¼þÖÃ0
+  49   1        RI = 0;
+  50   1        
+  51   1        
+  52   1        // ·¢ËÍÊý¾Ý(Ã»Ê²Ã´ºÃ·¢µÄ¾ÍÔ­»°·¢»ØÈ¥°É...)
+C51 COMPILER V9.60.0.0   MAIN                                                              06/03/2022 15:21:34 PAGE 2   
+
+  53   1        // Èûµ½SBUFÖÐ£¬½øÐÐ·¢ËÍ
+  54   1        SBUF = res;
+  55   1        // ·¢ËÍÍê³Éºó£¬Ó²¼þ»á½«TI£¨·¢ËÍÖÐ¶Ï¿ØÖÆÎ»£©ÖÃÎª1£¬±íÊ¾·¢ËÍÍê±Ï£¬ÐèÒªÈí¼þÖÃ0
+  56   1        while(!TI);
+  57   1        TI = 0;
+  58   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     72    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       4
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
